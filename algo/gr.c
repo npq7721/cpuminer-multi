@@ -116,28 +116,25 @@ static void getAlgoString(const uint8_t* prevblock, char *output, int algoCount)
 	*sptr = '\0';
 }
 
-void gr_hash(const char* input, char* output) {
+void gr_hash(void* output, const void* input) {
 	uint32_t hash[64/4];
 
-	sph_blake512_context ctx_blake;
-	sph_bmw512_context ctx_bmw;
-	sph_groestl512_context ctx_groestl;
-	sph_jh512_context ctx_jh;
-	sph_keccak512_context ctx_keccak;
-	sph_skein512_context ctx_skein;
-	sph_luffa512_context ctx_luffa;
-	sph_cubehash512_context ctx_cubehash;
-	sph_shavite512_context ctx_shavite;
-	sph_simd512_context ctx_simd;
-	sph_echo512_context ctx_echo;
-	sph_hamsi512_context ctx_hamsi;
-	sph_fugue512_context ctx_fugue;
-	sph_shabal512_context ctx_shabal;
-	sph_whirlpool_context ctx_whirlpool;
-	sph_haval256_5_context ctx_haval;
-	sph_tiger_context ctx_tiger;
-	sph_gost512_context ctx_gost;
-	sph_sha256_context ctx_sha;
+	sph_blake512_context     ctx_blake;
+	sph_bmw512_context       ctx_bmw;
+	sph_groestl512_context   ctx_groestl;
+	sph_skein512_context     ctx_skein;
+	sph_jh512_context        ctx_jh;
+	sph_keccak512_context    ctx_keccak;
+	sph_luffa512_context     ctx_luffa1;
+	sph_cubehash512_context  ctx_cubehash1;
+	sph_shavite512_context   ctx_shavite1;
+	sph_simd512_context      ctx_simd1;
+	sph_echo512_context      ctx_echo1;
+	sph_hamsi512_context     ctx_hamsi1;
+	sph_fugue512_context     ctx_fugue1;
+	sph_shabal512_context    ctx_shabal1;
+	sph_whirlpool_context    ctx_whirlpool1;
+	sph_sha512_context       ctx_sha512;
 
 	void *in = (void*) input;
 	int size = 80;
@@ -261,49 +258,49 @@ void gr_hash(const char* input, char* output) {
 				sph_keccak512_close(&ctx_keccak, hash);
 				break;
 		case LUFFA:
-				sph_luffa512_init(&ctx_luffa);
-				sph_luffa512(&ctx_luffa, in, size);
-				sph_luffa512_close(&ctx_luffa, hash);
+				sph_luffa512_init(&ctx_luffa1);
+				sph_luffa512(&ctx_luffa1, in, size);
+				sph_luffa512_close(&ctx_luffa1, hash);
 				break;
 		case CUBEHASH:
-				sph_cubehash512_init(&ctx_cubehash);
-				sph_cubehash512(&ctx_cubehash, in, size);
-				sph_cubehash512_close(&ctx_cubehash, hash);
+				sph_cubehash512_init(&ctx_cubehash1);
+				sph_cubehash512(&ctx_cubehash1, in, size);
+				sph_cubehash512_close(&ctx_cubehash1, hash);
 				break;
 		case SHAVITE:
-				sph_shavite512_init(&ctx_shavite);
-				sph_shavite512(&ctx_shavite, in, size);
-				sph_shavite512_close(&ctx_shavite, hash);
+				sph_shavite512_init(&ctx_shavite1);
+				sph_shavite512(&ctx_shavite1, in, size);
+				sph_shavite512_close(&ctx_shavite1, hash);
 				break;
 		case SIMD:
-				sph_simd512_init(&ctx_simd);
-				sph_simd512(&ctx_simd, in, size);
-				sph_simd512_close(&ctx_simd, hash);
+				sph_simd512_init(&ctx_simd1);
+				sph_simd512(&ctx_simd1, in, size);
+				sph_simd512_close(&ctx_simd1, hash);
 				break;
 		case ECHO:
-				sph_echo512_init(&ctx_echo);
-				sph_echo512(&ctx_echo, in, size);
-				sph_echo512_close(&ctx_echo, hash);
+				sph_echo512_init(&ctx_echo1);
+				sph_echo512(&ctx_echo1, in, size);
+				sph_echo512_close(&ctx_echo1, hash);
 				break;
 		case HAMSI:
-				sph_hamsi512_init(&ctx_hamsi);
-				sph_hamsi512(&ctx_hamsi, in, size);
-				sph_hamsi512_close(&ctx_hamsi, hash);
+				sph_hamsi512_init(&ctx_hamsi1);
+				sph_hamsi512(&ctx_hamsi1, in, size);
+				sph_hamsi512_close(&ctx_hamsi1, hash);
 				break;
 		case FUGUE:
-				sph_fugue512_init(&ctx_fugue);
-				sph_fugue512(&ctx_fugue, in, size);
-				sph_fugue512_close(&ctx_fugue, hash);
+				sph_fugue512_init(&ctx_fugue1);
+				sph_fugue512(&ctx_fugue1, in, size);
+				sph_fugue512_close(&ctx_fugue1, hash);
 				break;
 		case SHABAL:
-				sph_shabal512_init(&ctx_shabal);
-				sph_shabal512(&ctx_shabal, in, size);
-				sph_shabal512_close(&ctx_shabal, hash);
+				sph_shabal512_init(&ctx_shabal1);
+				sph_shabal512(&ctx_shabal1, in, size);
+				sph_shabal512_close(&ctx_shabal1, hash);
 				break;
 		case WHIRLPOOL:
-				sph_whirlpool_init(&ctx_whirlpool);
-				sph_whirlpool(&ctx_whirlpool, in, size);
-				sph_whirlpool_close(&ctx_whirlpool, hash);
+				sph_whirlpool_init(&ctx_whirlpool1);
+				sph_whirlpool(&ctx_whirlpool1, in, size);
+				sph_whirlpool_close(&ctx_whirlpool1, hash);
 				break;
 		}
 		in = (void*) hash;
