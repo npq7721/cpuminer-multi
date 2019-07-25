@@ -133,6 +133,7 @@ enum algos {
 	ALGO_X16R,
 	ALGO_X16S,
 	ALGO_X17,         /* X17 */
+	ALGO_GR,
 	ALGO_XEVAN,
 	ALGO_YESCRYPT,
 	ALGO_ZR5,
@@ -356,6 +357,7 @@ Options:\n\
                           x16r         X16R (Raven)\n\
                           x16s         X16S (Pigeon)\n\
                           x17          X17\n\
+						  gr           gr\n\
                           xevan        Xevan (BitSend)\n\
                           yescrypt     Yescrypt\n\
                           zr5          ZR5\n\
@@ -1850,6 +1852,7 @@ static void stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 			case ALGO_XEVAN:
 			case ALGO_X16R:
 			case ALGO_X16S:
+			case ALGO_GR:
 				work_set_target(work, sctx->job.diff / (256.0 * opt_diff_factor));
 				break;
 			case ALGO_KECCAK:
@@ -2203,6 +2206,7 @@ static void *miner_thread(void *userdata)
 			case ALGO_X16S:
 			case ALGO_X17:
 			case ALGO_ZR5:
+			case ALGO_GR:
 				max64 = 0x1ffff;
 				break;
 			case ALGO_BMW:
@@ -2403,6 +2407,9 @@ static void *miner_thread(void *userdata)
 			break;
 		case ALGO_X17:
 			rc = scanhash_x17(thr_id, &work, max_nonce, &hashes_done);
+			break;
+		case ALGO_GR:
+			rc = scanhash_gr(thr_id, &work, max_nonce, &hashes_done);
 			break;
 		case ALGO_XEVAN:
 			rc = scanhash_xevan(thr_id, &work, max_nonce, &hashes_done);
