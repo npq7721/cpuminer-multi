@@ -34,7 +34,7 @@
 #include "cryptonote/cryptonight_turtle.h"
 #include "cryptonote/cryptonight_turtle_lite.h"
 
-enum Algo {
+enum CoreAlgo {
         BLAKE = 0,
         BMW,
         GROESTL,
@@ -70,6 +70,10 @@ enum CNAlgo {
 	CNTurtlelitef,
 	CN_HASH_FUNC_COUNT
 };
+
+static __thread uint32_t s_ntime = UINT32_MAX;
+static __thread char hashOrder[16] = { 0 };
+static __thread char cnHashOrder[15] = { 0 };
 
 static void getAlgoString(const uint8_t* prevblock, char *output, int algoCount)
 {
@@ -114,8 +118,6 @@ static void getAlgoString(const uint8_t* prevblock, char *output, int algoCount)
 
 void gr_hash(const char* input, char* output) {
 	uint32_t hash[64/4];
-	char hashOrder[16] = { 0};
-	char cnHashOrder[15] = { 0};
 
 	sph_blake512_context ctx_blake;
 	sph_bmw512_context ctx_bmw;
@@ -326,9 +328,10 @@ int scanhash_gr(int thr_id, struct work *work, uint32_t max_nonce, uint64_t *has
 
 	if (s_ntime != pdata[17]) {
 		uint32_t ntime = swab32(pdata[17]);
-		getAlgoString((const char*) (&endiandata[1]), hashOrder);
+		getAlgoString((const char*) (&endiandata[1]), hashOrder,15);
+		getAlgoString((const char*) (&endiandata[1]), cnHashOrder,14);
 		s_ntime = ntime;
-		if (opt_debug && !thr_id) applog(LOG_DEBUG, "hash order %s (%08x)", hashOrder, ntime);
+		if (opt_debug && !thr_id) applog(LOG_DEBUG, "core hash order %s cn hash order %s (%08x)", hashOrder, cnHashOrder, ntime);
 	}
 
 	if (opt_benchmark)
