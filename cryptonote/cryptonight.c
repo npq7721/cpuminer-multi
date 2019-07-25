@@ -203,7 +203,7 @@ struct cryptonight_ctx {
     oaes_ctx* aes_ctx;
 };
 
-void cryptonight_hash(const char* input, char* output, uint32_t len, int variant) {
+void c_cryptonight_hash(const char* input, char* output, uint32_t len, int variant) {
 #if defined(_MSC_VER)
     struct cryptonight_ctx *ctx = _malloca(sizeof(struct cryptonight_ctx));
 #else
@@ -293,7 +293,7 @@ void cryptonight_hash(const char* input, char* output, uint32_t len, int variant
     oaes_free((OAES_CTX **) &ctx->aes_ctx);
 }
 
-void cryptonight_fast_hash(const char* input, char* output, uint32_t len) {
+void c_cryptonight_fast_hash(const char* input, char* output, uint32_t len) {
     union hash_state state;
     hash_process(&state, (const uint8_t*) input, len);
     memcpy(output, &state, HASH_SIZE);
